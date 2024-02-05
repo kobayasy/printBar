@@ -22,8 +22,8 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-AC_PREREQ(2.69)
-AC_INIT([printBar], [0.1], [kobayasy@kobayasy.com], [printbar])
+AC_PREREQ(2.72)
+AC_INIT([printBar], [1.0], [kobayasy@kobayasy.com], [printbar])
 AC_COPYRIGHT([Copyright @{:@C@:}@ 2024 by Yuichi Kobayashi <kobayasy@kobayasy.com>])
 AC_CONFIG_SRCDIR([printbar.c])
 AC_CONFIG_AUX_DIR([conf])
