@@ -36,4 +36,4 @@ printbar --help
 実行例↓
 <img src="printBar.png" alt="printBar"/>
 
-[syncTimeICOM]: https://github.com/kobayasy/printBar
+[printBar]: https://github.com/kobayasy/printBar
