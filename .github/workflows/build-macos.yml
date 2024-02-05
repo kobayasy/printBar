@@ -1,5 +1,5 @@
 # .github/workflows/build-macos.yml
-# Last modified: 03-Feb-2024 (kobayasy)
+# Last modified: 05-Feb-2024 (kobayasy)
 
 name: macOS
 
@@ -25,4 +25,4 @@ jobs:
         rmdir build
     - name: Run
       run: |
-        ~/bin/syncTimeICOM --help
+        ~/bin/printBar --help

@@ -29,7 +29,7 @@ make install
 ## 使い方
 1. 下記コマンドで使い方が表示されます。
 ```
-printBar --help
+printbar --help
 
 ```
 
