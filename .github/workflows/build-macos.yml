@@ -25,4 +25,4 @@ jobs:
         rmdir build
     - name: Run
       run: |
-        ~/bin/printBar --help
+        ~/bin/printbar --help
