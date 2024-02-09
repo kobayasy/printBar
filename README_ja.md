@@ -16,9 +16,9 @@ POSIX準拠のOSならば動作すると思います。
 ## インストール
 1. 下記コマンドでビルドとインストールを実行します。
 ```
-curl -LOJs https://github.com/kobayasy/printBar/releases/download/1.0/printBar-1.0.tar.gz
-tar xzf printBar-1.0.tar.gz
-cd printBar-1.0
+curl -LOJs https://github.com/kobayasy/printBar/releases/download/1.1/printBar-1.1.tar.gz
+tar xzf printBar-1.1.tar.gz
+cd printBar-1.1
 ./configure --prefix=$HOME
 make install
 

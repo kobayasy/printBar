@@ -1,4 +1,4 @@
-# configure.ac - Last modified: 05-Feb-2024 (kobayasy)
+# configure.ac - Last modified: 09-Feb-2024 (kobayasy)
 #
 # Copyright (C) 2024 by Yuichi Kobayashi <kobayasy@kobayasy.com>
 #
@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 AC_PREREQ(2.72)
-AC_INIT([printBar], [1.0], [kobayasy@kobayasy.com], [printbar])
+AC_INIT([printBar], [1.1], [kobayasy@kobayasy.com], [printbar])
 AC_COPYRIGHT([Copyright @{:@C@:}@ 2024 by Yuichi Kobayashi <kobayasy@kobayasy.com>])
 AC_CONFIG_SRCDIR([printbar.c])
 AC_CONFIG_AUX_DIR([conf])

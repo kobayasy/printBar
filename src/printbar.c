@@ -1,4 +1,4 @@
-/* printbar.c - Last modified: 05-Feb-2024 (kobayasy)
+/* printbar.c - Last modified: 09-Feb-2024 (kobayasy)
  *
  * Copyright (C) 2024 by Yuichi Kobayashi <kobayasy@kobayasy.com>
  *
@@ -23,6 +23,7 @@
  * SOFTWARE.
  */
 
+#include <float.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -37,7 +38,7 @@
 typedef struct s_llist {
     struct s_llist *next, *prev;
     int row;
-    intmax_t current;
+    double current;
     char name[1];
 } LLIST;
 
@@ -70,7 +71,7 @@ typedef struct {
     unsigned int header;
     unsigned int col;
     int fdout;
-    intmax_t max, min;
+    double max, min;
     TPBAR tpbar;
     int row;
 } PARAM;
@@ -113,15 +114,15 @@ static int parse_each(LLIST *l, void *data) {
         col = 0;
         for (s = strtok_r(line, " \t", &e); s != NULL; s = strtok_r(NULL, " \t", &e)) {
             if (col == param->col) {
-                l->current = strtod(s, NULL) * 1000000;
-                if (l->current > param->max)
-                    param->max = l->current;
-                if (l->current < param->min)
-                    param->min = l->current;
+                l->current = strtod(s, NULL);
                 break;
             }
             ++col;
         }
+        if (l->current > param->max)
+            param->max = l->current;
+        if (l->current < param->min)
+            param->min = l->current;
         status = 0;
 error:
         if (line != NULL)
@@ -135,7 +136,7 @@ static int print_each(LLIST *l, void *data) {
     PARAM *param = data;
     int co;
     char buffer[1024], *s;
-    intmax_t current, goal;
+    double n;
 
     if (*l->name == '\n')
         status = 1;
@@ -146,9 +147,9 @@ static int print_each(LLIST *l, void *data) {
         if (l->row < param->header)
             s += sprintf(s, "%-*.*s", co, co, l->name);
         else {
-            current = l->current - param->min;
-            goal = param->max - param->min;
-            s += tpbar_printf(s, current, goal, &param->tpbar, "%-*.*s", co, co, l->name);
+            n = param->max - param->min;
+            n = n > 0 ? (l->current - param->min) * INT16_MAX / n : INT16_MAX;
+            s += tpbar_printf(s, n, INT16_MAX, &param->tpbar, "%-*.*s", co, co, l->name );
         }
         if (write(STDOUT_FILENO, buffer, s - buffer) == -1) {
             status = -1;
@@ -176,8 +177,8 @@ static int printbar(FILE *fpin, unsigned int header, unsigned int col, int fdout
         .header = header,
         .col = col,
         .fdout = fdout,
-        .max = INTMAX_MIN,
-        .min = INTMAX_MAX
+        .max = -DBL_MAX,
+        .min =  DBL_MAX
     };
     LLIST llist;
     char buffer[1024], *s;
@@ -210,6 +211,7 @@ typedef struct {
 
 static int parse_arg(int argc, char *argv[], OPT *opt) {
     int status = INT_MIN;
+    long n;
     char *e;
 
     while (*++argv != NULL)
@@ -218,20 +220,22 @@ static int parse_arg(int argc, char *argv[], OPT *opt) {
             break;
         }
         else if (**argv == '+') {
-            opt->header = strtoul(*argv, &e, 10);
-            if (*e) {
+            n = strtol(*argv + 1, &e, 10);
+            if (*e || n < 0) {
                 fprintf(stderr, "Error: invalid option: %s\n", *argv);
                 status = -1;
                 goto error;
             }
+            opt->header = n;
         }
         else {
-            opt->col = strtoul(*argv, &e, 10);
-            if (*e) {
+            n = strtol(*argv, &e, 10);
+            if (*e || n < 0) {
                 fprintf(stderr, "Error: invalid parameter: %s\n", *argv);
                 status = -1;
                 goto error;
             }
+            opt->col = n;
         }
     status = 0;
 error:
@@ -243,11 +247,11 @@ static int usage(FILE *fp) {
 
     fprintf(fp, PACKAGE_STRING"\n"
                 "\n"
-                "Usage: "PACKAGE_TARNAME" [+HEADER] COLUMN\n"
+                "Usage: "PACKAGE_TARNAME" [+HEADER] [COLUMN]\n"
                 "       "PACKAGE_TARNAME" --help\n"
                 "\n"
-                "COLUMN    column for graph\n"
-                "HEADER    header lines that do not graph\n"
+                "COLUMN    column for graph (default: 0)\n"
+                "HEADER    header lines that do not graph (default: 0)\n"
                 "\n"
                 "subcommand\n"
                 "  --help  show this help\n"
