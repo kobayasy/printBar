@@ -1,9 +1,8 @@
-[インストール](#使い方)
+[Installation](#installation)
 |
-[使い方](#使い方)
+[Usage](#usage)
 *|*
-[英語(English)](README_en.md)
-
+[Japanase(日本語)](README_ja.md)
 
 ***
 [![macOS](https://github.com/kobayasy/printBar/workflows/macOS/badge.svg)](https://github.com/kobayasy/printBar/actions/workflows/build-macos.yml)
@@ -11,11 +10,11 @@
 *|*
 [![SAST](https://github.com/kobayasy/printBar/workflows/SAST/badge.svg)](https://github.com/kobayasy/printBar/actions/workflows/codeql-analysis.yml)
 
-[printBar] はコンソール出力に棒グラフを重ねて表示します。
-Terminfo が使えるPOSIX準拠のOSならば動作するはずです。
+[printBar] overlays a bar chart on the console output.
+It works on any POSIX OS that has Terminfo.
 
-## インストール
-1. 下記コマンドでビルドとインストールをします。
+## Installation
+1. Build and installation with the following.
 ```
 curl -LOJs https://github.com/kobayasy/printBar/releases/download/1.1/printBar-1.1.tar.gz
 tar xzf printBar-1.1.tar.gz
@@ -25,16 +24,16 @@ make install
 
 ```
 
-2. PATH に ~/bin が含まれていない場合は追加してください。
+2. Add ~/bin in the PATH if not included.
 
-## 使い方
-1. 下記コマンドで使い方が表示されます。
+## Usage
+1. Do the following to show usage.
 ```
 printbar --help
 
 ```
 
-実行例:
+Execution examples:
 <img src="printBar.png" alt="printBar"/>
 
 [printBar]: https://github.com/kobayasy/printBar
