@@ -1,6 +1,6 @@
-# configure.ac - Last modified: 09-Feb-2024 (kobayasy)
+# configure.ac - Last modified: 07-Feb-2026 (kobayasy)
 #
-# Copyright (C) 2024 by Yuichi Kobayashi <kobayasy@kobayasy.com>
+# Copyright (C) 2024-2026 by Yuichi Kobayashi <kobayasy@kobayasy.com>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -22,9 +22,9 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+AC_INIT([printBar], [1.2], [kobayasy@kobayasy.com], [printbar])
+AC_COPYRIGHT([Copyright @{:@C@:}@ 2024-2026 by Yuichi Kobayashi <kobayasy@kobayasy.com>])
 AC_PREREQ(2.72)
-AC_INIT([printBar], [1.1], [kobayasy@kobayasy.com], [printbar])
-AC_COPYRIGHT([Copyright @{:@C@:}@ 2024 by Yuichi Kobayashi <kobayasy@kobayasy.com>])
 AC_CONFIG_SRCDIR([printbar.c])
 AC_CONFIG_AUX_DIR([conf])
 
@@ -60,10 +60,9 @@ AS_VAR_IF([enableval], [yes],
 AX_PTHREAD([LIBS="$PTHREAD_LIBS $LIBS" CFLAGS="$CFLAGS $PTHREAD_CFLAGS" CC="$PTHREAD_CC"])
 AC_CHECK_HEADERS([termcap.h],
    [AC_CHECK_FUNC([tgetent],
-       [AC_DEFINE([HAVE_TGETENT], [1], [Define to 1 if you have the `tgetent' function.])],
+       [AC_DEFINE([HAVE_TGETENT], [1], [Define to 1 if you have the 'tgetent' function.])],
        [AC_SEARCH_LIBS([tgetent], [tinfo ncurses],
            [AC_DEFINE([HAVE_TGETENT], [1])] )] )] )
-
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_HEADERS([config.h])

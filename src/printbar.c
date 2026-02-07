@@ -1,6 +1,6 @@
-/* printbar.c - Last modified: 09-Feb-2024 (kobayasy)
+/* printbar.c - Last modified: 07-Feb-2026 (kobayasy)
  *
- * Copyright (C) 2024 by Yuichi Kobayashi <kobayasy@kobayasy.com>
+ * Copyright (C) 2024-2026 by Yuichi Kobayashi <kobayasy@kobayasy.com>
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation files
@@ -22,6 +22,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif  /* #ifdef HAVE_CONFIG_H */
 
 #include <float.h>
 #include <limits.h>
@@ -78,9 +82,11 @@ typedef struct {
 
 static int read_line(LLIST *llist, FILE *fpin) {
     int status = INT_MIN;
-    char buffer[1024], *s;
+    char *buffer = NULL;
+    size_t size = 0;
+    char *s;
 
-    while (fgets(buffer, sizeof(buffer), fpin) != NULL) {
+    while (getline(&buffer, &size, fpin) != -1) {
         s = strchr(buffer, '\n');
         if (s != NULL)
             *s = 0;
@@ -90,8 +96,13 @@ static int read_line(LLIST *llist, FILE *fpin) {
             goto error;
         }
     }
+    if (!feof(fpin)) {
+        status = -1;
+        goto error;
+    }
     status = 0;
 error:
+    free(buffer);
     return status;
 }
 
@@ -135,23 +146,25 @@ static int print_each(LLIST *l, void *data) {
     int status = INT_MIN;
     PARAM *param = data;
     int co;
-    char buffer[1024], *s;
+    STR line;
+    char str[1024];
     double n;
 
     if (*l->name == '\n')
         status = 1;
     else {
         co = param->tpbar.co - 1;
-        s = buffer;
-        s += tpbar_setrow(s, l->row, &param->tpbar);
+        STR_INIT(line, str);
+        ONERR(tpbar_setrow(&line, l->row, &param->tpbar), -1);
         if (l->row < param->header)
-            s += sprintf(s, "%-*.*s", co, co, l->name);
+            ONERR(str_catf(&line, "%-*.*s", co, co, l->name), -1);
         else {
             n = param->max - param->min;
             n = n > 0 ? (l->current - param->min) * INT16_MAX / n : INT16_MAX;
-            s += tpbar_printf(s, n, INT16_MAX, &param->tpbar, "%-*.*s", co, co, l->name );
+            ONERR(tpbar_printf(&line, n, INT16_MAX, &param->tpbar,
+                               "%-*.*s", co, co, l->name ), -1);
         }
-        if (write(STDOUT_FILENO, buffer, s - buffer) == -1) {
+        if (write(STDOUT_FILENO, line.s, str_len(&line)) == -1) {
             status = -1;
             goto error;
         }
@@ -181,7 +194,8 @@ static int printbar(FILE *fpin, unsigned int header, unsigned int col, int fdout
         .min =  DBL_MAX
     };
     LLIST llist;
-    char buffer[1024], *s;
+    STR line;
+    char str[1024];
 
     new_LLIST(&llist);
     tpbar_init(&param.tpbar);
@@ -189,9 +203,9 @@ static int printbar(FILE *fpin, unsigned int header, unsigned int col, int fdout
     ONERR(read_line(&llist, fpin), -1);
     each_next_LLIST(&llist, parse_each, &param, NULL);
     each_next_LLIST(&llist, print_each, &param, NULL);
-    s = buffer;
-    s += tpbar_setrow(s, INT_MAX, &param.tpbar);
-    if (write(STDOUT_FILENO, buffer, s - buffer) == -1) {
+    STR_INIT(line, str);
+    ONERR(tpbar_setrow(&line, INT_MAX, &param.tpbar), -1);
+    if (write(STDOUT_FILENO, line.s, str_len(&line)) == -1) {
         status = -1;
         goto error;
     }

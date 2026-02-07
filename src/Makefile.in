@@ -1,7 +1,7 @@
 # @configure_input@
-# Makefile.in - Last modified: 05-Feb-2024 (kobayasy)
+# Makefile.in - Last modified: 04-Feb-2026 (kobayasy)
 #
-# Copyright (C) 2024 by Yuichi Kobayashi <kobayasy@kobayasy.com>
+# Copyright (C) 2024-2026 by Yuichi Kobayashi <kobayasy@kobayasy.com>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
@@ -67,11 +67,13 @@ distclean : clean
 
 install : install-bin
 
-install-bin : $(TARGET)
-	test -d $(DESTDIR)$(bindir) || $(INSTALL) -m755 -d $(DESTDIR)$(bindir)
-	$(INSTALL) -m755 -s $^ $(DESTDIR)$(bindir)
+install-bin : $(TARGET) $(DESTDIR)$(bindir)
+	$(INSTALL) -m755 -s $^
 
 uninstall : uninstall-bin
 
 uninstall-bin :
 	$(RM) $(addprefix $(DESTDIR)$(bindir)/,$(notdir $(TARGET)))
+
+$(DESTDIR)$(bindir) :
+	$(INSTALL) -m755 -d $@
