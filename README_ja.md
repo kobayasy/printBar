@@ -1,5 +1,5 @@
 <!--
-README_ja.md - Last modified: 05-Feb-2026 (kobayasy)
+README_ja.md - Last modified: 08-Feb-2026 (kobayasy)
 -->
 
 [
@@ -12,7 +12,7 @@ README_ja.md - Last modified: 05-Feb-2026 (kobayasy)
 
 [![macOS](https://github.com/kobayasy/printBar/workflows/macOS/badge.svg)](https://github.com/kobayasy/printBar/actions/workflows/build-macos.yml)
 [![Linux](https://github.com/kobayasy/printBar/workflows/Linux/badge.svg)](https://github.com/kobayasy/printBar/actions/workflows/build-linux.yml)
-/
+<sup>|</sup>
 [![SAST](https://github.com/kobayasy/printBar/workflows/SAST/badge.svg)](https://github.com/kobayasy/printBar/actions/workflows/codeql-analysis.yml)
 
 コンソール出力に棒グラフを重ねて表示します。
